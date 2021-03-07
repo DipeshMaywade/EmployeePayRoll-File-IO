@@ -35,6 +35,8 @@ public class EmployeePayrollService {
     public void printData(IOService ioService) {
         if (ioService.equals(IOService.FILE_IO))
             new EmployeePayrollFileIOService().printData();
+        else
+            System.out.println("Chose File_IO");
     }
 
     public long countEntries(IOService ioService) {
