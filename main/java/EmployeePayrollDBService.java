@@ -93,4 +93,17 @@ public class EmployeePayrollDBService {
         }
         return 0;
     }
+
+    public List<EmployeePayrollData> readFilteredData(String date,String endDate) {
+        String sql = String.format("select * from employee_payroll where start between '%s' and '%s';",date,endDate);
+        List<EmployeePayrollData> employeePayrollDataList = new ArrayList<>();
+        try (Connection connection = this.getConnection()){
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            employeePayrollDataList = this.getEmployeePayRollData(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return employeePayrollDataList;
+    }
 }

@@ -91,4 +91,10 @@ public class EmployeePayrollService {
         List<EmployeePayrollData>employeePayrollDataList= employeePayrollDBService.getEmployeePayRollData(name);
         return employeePayrollDataList.get(0).equals(employeePayrollDBService.getEmployeePayRollData(name).get(0));
     }
+
+    public List<EmployeePayrollData> readFilteredEmpPayRollData(IOService ioService,String date,String date1) {
+        if (ioService.equals(IOService.DB_IO))
+            this.employeePayrollList = employeePayrollDBService.readFilteredData(date,date1);
+        return this.employeePayrollList;
+    }
 }

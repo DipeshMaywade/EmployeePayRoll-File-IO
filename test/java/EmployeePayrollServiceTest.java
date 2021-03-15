@@ -40,6 +40,16 @@ public class EmployeePayrollServiceTest {
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmpPayRollData(EmployeePayrollService.IOService.DB_IO);
         employeePayrollService.updateEmployeeSalary("terisa", 30000000.00);
         boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("Terisa");
-        Assertions.assertEquals(true,result);
+        Assertions.assertEquals(true, result);
+    }
+
+    @Test
+    void givenDateRangeToEmployeePayRollInDB_WhenRetrieved_ShouldMatchFilteredEmployeeCount() {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        String date = "2018-01-01";
+        String endDate= "2019-12-22";
+        List<EmployeePayrollData> employeePayrollData = employeePayrollService.readFilteredEmpPayRollData(EmployeePayrollService.IOService.DB_IO,date,endDate);
+        System.out.println(employeePayrollData);
+        Assertions.assertEquals(2,employeePayrollData.size());
     }
 }
