@@ -11,8 +11,10 @@ public class EmployeePayrollService {
     public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList){
         this.employeePayrollList=employeePayrollList;
     }
+    public EmployeePayrollService(){
+    }
 
-    public void readData(IOService ioService){
+    public long readData(IOService ioService){
         if (ioService.equals(IOService.CONSOLE_IO)) {
             Scanner scan = new Scanner(System.in);
             System.out.println("Enter Employee Name");
@@ -24,9 +26,13 @@ public class EmployeePayrollService {
 
             EmployeePayrollData adder = new EmployeePayrollData(empName, empID, empSalary);
             employeePayrollList.add(adder);
-        }else if (ioService.equals(IOService.FILE_IO)){
-            new EmployeePayrollFileIOService().readData();
-        }
+            long result = employeePayrollList.size();
+            return result;
+        }else if(ioService.equals(IOService.FILE_IO)){
+            this.employeePayrollList = new EmployeePayrollFileIOService().readData();
+            return employeePayrollList.size();
+        }else
+            return 0;
     }
 
     public void empWriteData(IOService ioService){
@@ -52,7 +58,14 @@ public class EmployeePayrollService {
     public static void main(String[] args) {
         ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<>();
         EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
-        employeePayrollService.readData(IOService.FILE_IO);
         employeePayrollService.empWriteData(IOService.FILE_IO);
+        employeePayrollService.readData(IOService.FILE_IO);
+
+    }
+
+    public List<EmployeePayrollData> readEmpPayRollData(IOService ioService) {
+        if (ioService.equals(IOService.DB_IO))
+            this.employeePayrollList = new EmployeePayrollDBService().readData();
+        return this.employeePayrollList;
     }
 }
