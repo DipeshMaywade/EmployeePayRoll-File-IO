@@ -1,6 +1,7 @@
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
@@ -81,15 +82,16 @@ public class EmployeePayrollService {
     }
 
     private EmployeePayrollData getEmployeePayRollData(String name) {
-        return this.employeePayrollList.stream()
-                .filter(employeePayrollDataItem -> employeePayrollDataItem.employeeName.equals(name))
-                .findFirst()
-                .orElse(null);
+        for (EmployeePayrollData data : employeePayrollList) {
+            if (data.employeeName.equals(name))
+                return data;
+        }
+        return null;
     }
 
     public boolean checkEmployeePayRollSyncWithDB(String name) {
         List<EmployeePayrollData>employeePayrollDataList= employeePayrollDBService.getEmployeePayRollData(name);
-        return employeePayrollDataList.get(0).equals(employeePayrollDBService.getEmployeePayRollData(name).get(0));
+        return employeePayrollDataList.get(0).equals(getEmployeePayRollData(name));
     }
 
     public List<EmployeePayrollData> readFilteredEmpPayRollData(IOService ioService,String date,String date1) {

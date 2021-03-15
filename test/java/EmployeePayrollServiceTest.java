@@ -38,8 +38,8 @@ public class EmployeePayrollServiceTest {
     void givenNewSalaryForEmployee_whenUpdate_shouldSyncWithDB() {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmpPayRollData(EmployeePayrollService.IOService.DB_IO);
-        employeePayrollService.updateEmployeeSalary("terisa", 30000000.00);
-        boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("Terisa");
+        employeePayrollService.updateEmployeeSalary("TERISA", 30000000.00);
+        boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("TERISA");
         Assertions.assertEquals(true, result);
     }
 
@@ -47,9 +47,8 @@ public class EmployeePayrollServiceTest {
     void givenDateRangeToEmployeePayRollInDB_WhenRetrieved_ShouldMatchFilteredEmployeeCount() {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         String date = "2018-01-01";
-        String endDate= "2019-12-22";
+        String endDate= "2020-12-22";
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readFilteredEmpPayRollData(EmployeePayrollService.IOService.DB_IO,date,endDate);
-        System.out.println(employeePayrollData);
-        Assertions.assertEquals(2,employeePayrollData.size());
+        Assertions.assertEquals(3,employeePayrollData.size());
     }
 }

@@ -101,8 +101,8 @@ public class EmployeePayrollDBService {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             employeePayrollDataList = this.getEmployeePayRollData(resultSet);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return employeePayrollDataList;
     }
