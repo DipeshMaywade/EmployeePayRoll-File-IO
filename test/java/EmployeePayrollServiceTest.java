@@ -51,4 +51,31 @@ public class EmployeePayrollServiceTest {
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readFilteredEmpPayRollData(EmployeePayrollService.IOService.DB_IO,date,endDate);
         Assertions.assertEquals(3,employeePayrollData.size());
     }
+
+    @Test
+    void givenGenderToEmployeeRollDB_whenRetrievedSumOfSalary_shouldMatchExpectedSumOfSalary () {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        String gender = "M";
+        double sumOfSalary = employeePayrollService.sumOfSalary(EmployeePayrollService.IOService.DB_IO,gender);
+        double expectedSumOfSalary = 60000000.00;
+        Assertions.assertEquals(expectedSumOfSalary,sumOfSalary);
+    }
+
+    @Test
+    void givenGenderToEmployeeRollDB_whenRetrievedAverage_shouldMatchExpectedAverageOfSalary () {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        String gender = "M";
+        double sumOfSalary = employeePayrollService.avgOfSalary(EmployeePayrollService.IOService.DB_IO,gender);
+        double expectedSumOfSalary = 35000000.00;
+        Assertions.assertEquals(expectedSumOfSalary,sumOfSalary);
+    }
+
+    @Test
+    void givenGenderToEmployeeRollDB_whenRetrievedCount_shouldMatchExpectedCount () {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        String gender = "M";
+        int sumOfSalary = employeePayrollService.countByGender(EmployeePayrollService.IOService.DB_IO,gender);
+        int expectedSumOfSalary = 2;
+        Assertions.assertEquals(expectedSumOfSalary,sumOfSalary);
+    }
 }

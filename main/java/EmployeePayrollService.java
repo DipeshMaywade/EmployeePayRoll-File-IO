@@ -1,7 +1,5 @@
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
@@ -98,5 +96,29 @@ public class EmployeePayrollService {
         if (ioService.equals(IOService.DB_IO))
             this.employeePayrollList = employeePayrollDBService.readFilteredData(date,date1);
         return this.employeePayrollList;
+    }
+
+    public double sumOfSalary(IOService ioService, String gender) {
+        if (ioService.equals(IOService.DB_IO)) {
+            double result = employeePayrollDBService.sumOfSalary(gender);
+            return result;
+        }
+        return 0.0;
+    }
+
+    public double avgOfSalary(IOService ioService, String gender) {
+        if (ioService.equals(IOService.DB_IO)) {
+            double result = employeePayrollDBService.avgOfSalary(gender);
+            return result;
+        }
+        return 0.0;
+    }
+
+    public int countByGender(IOService ioService, String gender) {
+        if (ioService.equals(IOService.DB_IO)) {
+            int result = employeePayrollDBService.countByGender(gender);
+            return result;
+        }
+        return 0;
     }
 }

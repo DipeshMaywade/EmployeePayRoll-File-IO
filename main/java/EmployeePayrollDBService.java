@@ -106,4 +106,49 @@ public class EmployeePayrollDBService {
         }
         return employeePayrollDataList;
     }
+
+    public double sumOfSalary(String gender) {
+        String sql = String.format("select sum(salary) from employee_payroll where gender='%s'", gender);
+        double result = 0;
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                result = resultSet.getDouble("sum(salary)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public double avgOfSalary(String gender) {
+        String sql = String.format("select avg(salary) from employee_payroll where gender='%s'", gender);
+        double result = 0;
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                result = resultSet.getDouble("avg(salary)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int countByGender(String gender) {
+        String sql = String.format("select count(gender) from employee_payroll where gender='%s'", gender);
+        int result = 0;
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                result = resultSet.getInt("count(gender)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
