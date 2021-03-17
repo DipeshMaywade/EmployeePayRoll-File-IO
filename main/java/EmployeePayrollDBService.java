@@ -1,3 +1,4 @@
+import javax.xml.catalog.Catalog;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -94,8 +95,8 @@ public class EmployeePayrollDBService {
         return 0;
     }
 
-    public List<EmployeePayrollData> readFilteredData(String date,String endDate) {
-        String sql = String.format("select * from employee_payroll where start between '%s' and '%s';",date,endDate);
+    public List<EmployeePayrollData> readFilteredData(LocalDate date,LocalDate endDate) {
+        String sql = String.format("select * from employee_payroll where start between '%s' and '%s';",Date.valueOf(date),Date.valueOf(endDate));
         List<EmployeePayrollData> employeePayrollDataList = new ArrayList<>();
         try (Connection connection = this.getConnection()){
             Statement statement = connection.createStatement();
@@ -150,5 +151,24 @@ public class EmployeePayrollDBService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public EmployeePayrollData addEmployeeData(String name, String gender, double salary, LocalDate date) {
+        int employeeID = -1;
+        String sql = String.format("insert into employee_payroll (name,gender,salary,start) values ('%s','%s','%s','%s')", name, gender, salary, Date.valueOf(date));
+        EmployeePayrollData employeePayrollData = null;
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            int rowAffected = statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
+            if (rowAffected == 1) {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next())
+                    employeeID = resultSet.getInt(1);
+            }
+            employeePayrollData = new EmployeePayrollData(name, employeeID, salary, gender, date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeePayrollData;
     }
 }

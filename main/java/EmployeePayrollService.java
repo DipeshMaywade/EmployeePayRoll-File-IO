@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -92,7 +93,7 @@ public class EmployeePayrollService {
         return employeePayrollDataList.get(0).equals(getEmployeePayRollData(name));
     }
 
-    public List<EmployeePayrollData> readFilteredEmpPayRollData(IOService ioService,String date,String date1) {
+    public List<EmployeePayrollData> readFilteredEmpPayRollData(IOService ioService, LocalDate date, LocalDate date1) {
         if (ioService.equals(IOService.DB_IO))
             this.employeePayrollList = employeePayrollDBService.readFilteredData(date,date1);
         return this.employeePayrollList;
@@ -120,5 +121,9 @@ public class EmployeePayrollService {
             return result;
         }
         return 0;
+    }
+
+    public void addEmployee(String name, String gender, double salary, LocalDate date) {
+        employeePayrollList.add(employeePayrollDBService.addEmployeeData(name,gender,salary,date));
     }
 }

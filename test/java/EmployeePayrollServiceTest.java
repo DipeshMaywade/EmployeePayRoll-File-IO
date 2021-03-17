@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,8 +48,8 @@ public class EmployeePayrollServiceTest {
     @Test
     void givenDateRangeToEmployeePayRollInDB_WhenRetrieved_ShouldMatchFilteredEmployeeCount() {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-        String date = "2018-01-01";
-        String endDate= "2020-12-22";
+        LocalDate date = LocalDate.of(2018,01,01);
+        LocalDate endDate= LocalDate.now();
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readFilteredEmpPayRollData(EmployeePayrollService.IOService.DB_IO,date,endDate);
         Assertions.assertEquals(3,employeePayrollData.size());
     }
@@ -78,4 +80,14 @@ public class EmployeePayrollServiceTest {
         int expectedSumOfSalary = 2;
         Assertions.assertEquals(expectedSumOfSalary,sumOfSalary);
     }
+
+    @Test
+    void givenNewEmployeeToEmployeeRollDB_whenAdded_shouldSyncWithDB () {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmpPayRollData(EmployeePayrollService.IOService.DB_IO);
+        employeePayrollService.addEmployee("MARK","M",50000000.00,LocalDate.now());
+        boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("MARK");
+        Assertions.assertTrue(result);
+    }
+
 }
