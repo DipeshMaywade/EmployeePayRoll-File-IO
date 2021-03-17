@@ -89,5 +89,4 @@ public class EmployeePayrollServiceTest {
         boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("MARK");
         Assertions.assertTrue(result);
     }
-
 }
