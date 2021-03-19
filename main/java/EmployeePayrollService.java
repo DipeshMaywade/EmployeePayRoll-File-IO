@@ -131,7 +131,7 @@ public class EmployeePayrollService {
             this.addEmployee(employeePayrollData.employeeName,employeePayrollData.gender,employeePayrollData.employeeSalary,employeePayrollData.start);
             System.out.println("Emp Added: "+employeePayrollData.employeeName);
         });
-        System.out.println(employeePayrollList);
+        System.out.println(employeePayrollDataList);
     }
 
     public void addEmployeeToDBWithThreads(List<EmployeePayrollData> employeePayrollDataList) {
