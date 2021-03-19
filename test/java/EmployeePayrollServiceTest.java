@@ -1,6 +1,8 @@
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -88,5 +90,23 @@ public class EmployeePayrollServiceTest {
         employeePayrollService.addEmployee("MARK","M",50000000.00,LocalDate.now());
         boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("MARK");
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    void givenNewEmployeeToEmployeeRollDB_whenAdded_shouldMatchWithEntries () {
+        EmployeePayrollData[] payrollData = {
+                new EmployeePayrollData("Jeff", 0, 1000000.00, "M", LocalDate.now()),
+                new EmployeePayrollData("Bill", 0, 2000000.00, "M", LocalDate.now()),
+                new EmployeePayrollData("Sunder", 0, 4000000.00, "M", LocalDate.now()),
+                new EmployeePayrollData("Mukesh", 0, 44000000.00, "M", LocalDate.now()),
+                new EmployeePayrollData("Anil", 0, 5000000.00, "M", LocalDate.now()),
+        };
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmpPayRollData(EmployeePayrollService.IOService.DB_IO);
+        Instant start = Instant.now();
+        employeePayrollService.addEmployee(Arrays.asList(payrollData));
+        Instant end = Instant.now();
+        System.out.println("Duration with thread  "+Duration.between(start,end));
+        Assertions.assertEquals(6,employeePayrollService.countEntries(EmployeePayrollService.IOService.DB_IO));
     }
 }

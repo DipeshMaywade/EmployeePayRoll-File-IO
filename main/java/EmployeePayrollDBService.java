@@ -1,4 +1,3 @@
-import javax.xml.catalog.Catalog;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -154,7 +153,7 @@ public class EmployeePayrollDBService {
     }
 
     public EmployeePayrollData addEmployeeDataUC7(String name, String gender, double salary, LocalDate date) {
-        int employeeID = -1;
+        int employeeID = 0;
         String sql = String.format("insert into employee_payroll (name,gender,salary,start) values ('%s','%s','%s','%s')", name, gender, salary, Date.valueOf(date));
         EmployeePayrollData employeePayrollData = null;
         try (Connection connection = this.getConnection()) {
@@ -204,7 +203,7 @@ public class EmployeePayrollDBService {
             double taxablePay = salary-deductions;
             double tax = taxablePay * 0.1;
             double netPay = salary-tax;
-            String sql = String.format("insert into payroll_details (id, basic_pay, deductions, taxable_pay, tax, net_pay ) values " +
+            String sql = String.format("insert into payroll_details (emp_id, basic_pay, deductions, taxable_pay, tax, net_pay ) values " +
                                        "( %s,%s,%s,%s,%s,%s)", employeeID, salary, deductions, taxablePay, tax, netPay);
             int rowAffected = statement.executeUpdate(sql);
             if (rowAffected==1){
