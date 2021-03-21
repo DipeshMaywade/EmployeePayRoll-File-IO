@@ -1,10 +1,8 @@
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.Instant;
@@ -141,4 +139,31 @@ public class EmployeePayrollServiceTest {
         EmployeePayrollData[] arrayOfEmp = new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
         return arrayOfEmp ;
     }
+
+    @Test
+    void givenNewEmployee_whenAdded_shouldMatchStatusCode() {
+        EmployeePayrollService employeePayrollService;
+        EmployeePayrollData[] payrollData = getEmployeeList();
+        employeePayrollService = new EmployeePayrollService(Arrays.asList(payrollData));
+
+        EmployeePayrollData employeePayrollData =null;
+        employeePayrollData = new EmployeePayrollData("Mark",0,300000);
+        Response response = addEmployeeToJSONServer(employeePayrollData);
+        int statusCode = response.getStatusCode();
+        Assertions.assertEquals(201,statusCode);
+
+        employeePayrollData = new Gson().fromJson(response.asString(),EmployeePayrollData.class);
+        employeePayrollService.addEmployeeToJSON(employeePayrollData);
+        long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+        Assertions.assertEquals(3,entries);
+    }
+
+    private Response addEmployeeToJSONServer(EmployeePayrollData employeePayrollData) {
+        String empJSON = new  Gson().toJson(employeePayrollData);
+        RequestSpecification requestSpecification = RestAssured.given();
+        requestSpecification.header("Content-Type","application/json");
+        requestSpecification.body(empJSON);
+        return requestSpecification.post("/employee_payroll");
+    }
 }
+

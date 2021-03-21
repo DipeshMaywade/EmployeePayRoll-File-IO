@@ -153,4 +153,8 @@ public class EmployeePayrollService {
         }
         System.out.println(employeePayrollDataList);
     }
+
+    public void addEmployeeToJSON(EmployeePayrollData employeePayrollData) {
+        employeePayrollList.add(employeePayrollData);
+    }
 }
