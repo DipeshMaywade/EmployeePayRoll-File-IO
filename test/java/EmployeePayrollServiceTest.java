@@ -165,5 +165,28 @@ public class EmployeePayrollServiceTest {
         requestSpecification.body(empJSON);
         return requestSpecification.post("/employee_payroll");
     }
+
+    @Test
+    void givenListOfNewEmployee_whenAdded_shouldMatch201Response() {
+        EmployeePayrollService employeePayrollService;
+        EmployeePayrollData[] payrollData = getEmployeeList();
+        employeePayrollService = new EmployeePayrollService(Arrays.asList(payrollData));
+
+        EmployeePayrollData[] data = {
+                new EmployeePayrollData("Sunder",0,60000.00),
+                new EmployeePayrollData("Mukesh",0,70000.00),
+                new EmployeePayrollData("Anil",0,80000.00)
+        };
+        for (EmployeePayrollData employeePayrollData : data){
+            Response response = addEmployeeToJSONServer(employeePayrollData);
+            int statusCode = response.getStatusCode();
+            Assertions.assertEquals(201,statusCode);
+
+            employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+            employeePayrollService.addEmployeeToJSON(employeePayrollData);
+        }
+        long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+        Assertions.assertEquals(11,entries);
+    }
 }
 
