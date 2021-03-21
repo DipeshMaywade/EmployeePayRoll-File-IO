@@ -13,7 +13,7 @@ public class EmployeePayrollService {
     
     public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList){
         this();
-        this.employeePayrollList=employeePayrollList;
+        this.employeePayrollList = new ArrayList<>(employeePayrollList);
     }
 
     public long readData(IOService ioService){

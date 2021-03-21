@@ -1,5 +1,10 @@
-import org.junit.Before;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.Instant;
@@ -95,7 +100,7 @@ public class EmployeePayrollServiceTest {
     @Test
     void givenNewEmployeeToEmployeeRollDB_whenAdded_shouldMatchWithEntries () {
         EmployeePayrollData[] payrollData = {
-                new EmployeePayrollData("Jeff", 0, 1000000.00, "M", LocalDate.now()),
+                new EmployeePayrollData("Jeff", 0, 1000000.00, "F", LocalDate.now()),
                 new EmployeePayrollData("Bill", 0, 2000000.00, "M", LocalDate.now()),
                 new EmployeePayrollData("Sunder", 0, 4000000.00, "M", LocalDate.now()),
                 new EmployeePayrollData("Mukesh", 0, 44000000.00, "M", LocalDate.now()),
@@ -113,5 +118,27 @@ public class EmployeePayrollServiceTest {
         System.out.println("Duration with thread  "+Duration.between(threadStart,threadEnd));
         employeePayrollService.printData(EmployeePayrollService.IOService.DB_IO);
         Assertions.assertEquals(11,employeePayrollService.countEntries(EmployeePayrollService.IOService.DB_IO));
+    }
+
+    public void setup(){
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = 3000;
+    }
+
+    @Test
+    void givenEmployeeDataInJSONServer_WhenRetrieved_shouldMatchYheCount() {
+        EmployeePayrollData[] payrollData = getEmployeeList();
+        EmployeePayrollService employeePayrollService;
+        employeePayrollService = new EmployeePayrollService(Arrays.asList(payrollData));
+        long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
+        Assertions.assertEquals(2,entries);
+    }
+
+    public EmployeePayrollData[] getEmployeeList() {
+        setup();
+        Response response = RestAssured.get("/employee_payroll");
+        System.out.println("Employee Payroll Entries In JsonServer:\n"+ response.asString());
+        EmployeePayrollData[] arrayOfEmp = new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
+        return arrayOfEmp ;
     }
 }
