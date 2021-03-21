@@ -159,4 +159,12 @@ public class EmployeePayrollService {
     public void addEmployeeToJSON(EmployeePayrollData employeePayrollData) {
         employeePayrollList.add(employeePayrollData);
     }
+
+    public void deleteEmpFromJSON(String employeeName,IOService ioService) {
+        if (ioService.equals(IOService.REST_IO)) {
+            EmployeePayrollData employeePayrollData = this.getEmployeePayRollData(employeeName);
+            employeePayrollList.remove(employeePayrollData);
+        }
+    }
+
 }
