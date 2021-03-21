@@ -14,6 +14,11 @@ public class EmployeePayrollData {
         this.start = start;
     }
 
+    public EmployeePayrollData(String employeeName, double employeeSalary) {
+        this.employeeName = employeeName;
+        this.employeeSalary = employeeSalary;
+    }
+
     public EmployeePayrollData(String employeeName, int employeeID, double employeeSalary) {
         this.employeeName = employeeName;
         this.employeeID = employeeID;

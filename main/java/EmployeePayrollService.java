@@ -71,14 +71,16 @@ public class EmployeePayrollService {
         return this.employeePayrollList;
     }
 
-    public void updateEmployeeSalary(String name, double salary) {
-        int result = employeePayrollDBService.updateEmployeeData(name,salary);
-        if (result == 0) return;
+    public void updateEmployeeSalary(String name, double salary,IOService ioService) {
+        if (ioService.equals(IOService.DB_IO)) {
+            int result = employeePayrollDBService.updateEmployeeData(name, salary);
+            if (result == 0) return;
+        }
         EmployeePayrollData employeePayrollData = this.getEmployeePayRollData(name);
         if (employeePayrollData != null) employeePayrollData.employeeSalary= (int) salary;
     }
 
-    private EmployeePayrollData getEmployeePayRollData(String name) {
+    public EmployeePayrollData getEmployeePayRollData(String name) {
         for (EmployeePayrollData data : employeePayrollList) {
             if (data.employeeName.equals(name))
                 return data;

@@ -45,7 +45,7 @@ public class EmployeePayrollServiceTest {
     void givenNewSalaryForEmployee_whenUpdate_shouldSyncWithDB() {
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmpPayRollData(EmployeePayrollService.IOService.DB_IO);
-        employeePayrollService.updateEmployeeSalary("TERISA", 30000000.00);
+        employeePayrollService.updateEmployeeSalary("TERISA", 30000000.00, EmployeePayrollService.IOService.DB_IO);
         boolean result = employeePayrollService.checkEmployeePayRollSyncWithDB("TERISA");
         Assertions.assertEquals(true, result);
     }
@@ -173,9 +173,9 @@ public class EmployeePayrollServiceTest {
         employeePayrollService = new EmployeePayrollService(Arrays.asList(payrollData));
 
         EmployeePayrollData[] data = {
-                new EmployeePayrollData("Sunder",0,60000.00),
-                new EmployeePayrollData("Mukesh",0,70000.00),
-                new EmployeePayrollData("Anil",0,80000.00)
+                new EmployeePayrollData("Sunder",1,60000.00),
+                new EmployeePayrollData("Mukesh",2,70000.00),
+                new EmployeePayrollData("Anil",3,80000.00)
         };
         for (EmployeePayrollData employeePayrollData : data){
             Response response = addEmployeeToJSONServer(employeePayrollData);
@@ -187,6 +187,24 @@ public class EmployeePayrollServiceTest {
         }
         long entries = employeePayrollService.countEntries(EmployeePayrollService.IOService.REST_IO);
         Assertions.assertEquals(11,entries);
+    }
+
+    @Test
+    void givenNewSalaryForEmp_whenUpdateShouldMatch200Response() {
+        EmployeePayrollService employeePayrollService;
+        EmployeePayrollData[] payrollData = getEmployeeList();
+        employeePayrollService = new EmployeePayrollService(Arrays.asList(payrollData));
+
+        employeePayrollService.updateEmployeeSalary("Anil",90000.00, EmployeePayrollService.IOService.REST_IO);
+        EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayRollData("Anil");
+
+        String empJson = new Gson().toJson(employeePayrollData);
+        RequestSpecification requestSpecification = RestAssured.given();
+        requestSpecification.header("Content-Type","application/json");
+        requestSpecification.body(empJson);
+        Response response = requestSpecification.put("/employee_payroll/"+3);
+        int statusCode = response.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
     }
 }
 
